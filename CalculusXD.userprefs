@@ -1,0 +1,18 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="CalculusXD/CompositeFunction.cpp">
+    <Files>
+      <File FileName="CalculusXD/Liczenie.cpp" Line="1" Column="1" />
+      <File FileName="CalculusXD/EntryClass.cpp" Line="16" Column="36" />
+      <File FileName="CalculusXD/Liczenie.h" Line="1" Column="1" />
+      <File FileName="CalculusXD/EntryClass.h" Line="12" Column="17" />
+      <File FileName="CalculusXD/main.cpp" Line="14" Column="30" />
+      <File FileName="CalculusXD/CompositeFunction.h" Line="17" Column="27" />
+      <File FileName="CalculusXD/CompositeFunction.cpp" Line="8" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
