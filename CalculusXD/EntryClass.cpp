@@ -1,58 +1,78 @@
 #include "EntryClass.h"
-#include <cmath>
-#include <iostream>
+
 using namespace std;
 
 EntryClass::EntryClass(string entry)
 {
-    this->entry = entry;
-    parseOnAddition();
+	FunctionPiece entryFunction(entry, 1);
+    parseOnAddition(entryFunction);
 }
 
 //TODO narazie rozpoznaje tylko mnozenie przed funkcja bez '*', dodaj zeby dzialalo z '*', moze nie dzialac jak poczatek zaczyna sie od '-';
-void EntryClass::parseOnAddition()
+void EntryClass::parseOnAddition(FunctionPiece entry)
 {
-	functionPiece tempFunctionPiece;
-	tempFunctionPiece.mainFunction = "";
-    tempFunctionPiece.token = 0;
+	FunctionPiece tempFunctionPiece("", 0);
 
     int startOfAPiece=0;
     int parenthesisNumber = 0;
 
-    for(int i=0; i<entry.length(); i++)
+    for(int i=0; i<entry.mainFunction.length(); i++)
     {
-        if(entry[i]=='(')
+        if(entry.mainFunction[i]=='(')
             parenthesisNumber++;
-        else if(entry[i]==')')
+        else if(entry.mainFunction[i]==')')
             parenthesisNumber--;
-        else if(canParseFunctionThere(entry[i], parenthesisNumber) || i==(entry.length()-1)) //dzieli na znakach +/- i ostatni kawalek
-        {
-                
-
-            tempFunctionPiece.token=setTokenSign(entry[startOfAPiece]);
+        else if(canParseFunctionThere(entry.mainFunction[i], parenthesisNumber) || i==(entry.mainFunction.length()-1)) //dzieli na znakach +/- i ostatni kawalek
+        {            
+            tempFunctionPiece.token=setTokenSign(entry.mainFunction[startOfAPiece]);
             if(startOfAPiece == 0)
             	tempFunctionPiece.token=1;
             
             int j = startOfAPiece + 1;
 			
-			tempFunctionPiece.token*=setTokenValue(j, i);
-			tempFunctionPiece.mainFunction = setMainFunction(j, i);
+			tempFunctionPiece.token*=setTokenValue(entry.mainFunction, j, i);
+			tempFunctionPiece.token*=entry.token; //mnozysz razy token przed cala podana funkcja(nawiasy itp)
+			tempFunctionPiece.mainFunction = setMainFunction(entry.mainFunction, j, i);
 
-            if(i==entry.length()-1)
-            	tempFunctionPiece.mainFunction+=entry[i];
+            if(i==entry.mainFunction.length()-1)
+            	tempFunctionPiece.mainFunction+=entry.mainFunction[i];
             	
             function.push_back(tempFunctionPiece);
             startOfAPiece=i;
             tempFunctionPiece.mainFunction = "";
             tempFunctionPiece.token = 0;
-        }
-
+        }     
     }
-
+    for(int j=parsedFunctions; j<function.size(); j++)
+    {
+    	if(isCompletelyParsed(function[j]))
+    	{
+    		//TODO usun poczatek i koniec ('(' i ')')
+    		parseOnAddition(function[j]);
+    		//TODO function[i].erase
+    		parsedFunctions = j-1;
+    	}
+    }
     return;
 }
 
-int EntryClass::setTokenValue(int &start, int end)
+bool EntryClass::canParseFunctionThere(char character, int paranthesisNumber)
+{
+	if((character=='+' || character=='-') && paranthesisNumber == 0)
+		return true;
+		
+	return false;
+}
+
+int EntryClass::setTokenSign(char startingSign)
+{
+	if(startingSign=='-')
+		return -1; 
+	else
+		return 1;
+}
+
+int EntryClass::setTokenValue(string entry, int &start, int end)
 {
 	string value="";
 	int i=start;
@@ -65,7 +85,7 @@ int EntryClass::setTokenValue(int &start, int end)
 	return stringToInt(value);
 }
 
-string EntryClass::setMainFunction(int &start, int end)
+string EntryClass::setMainFunction(string entry, int &start, int end)
 {
 	string mainFunction = "";
 	int i = start;
@@ -76,22 +96,6 @@ string EntryClass::setMainFunction(int &start, int end)
 	
 	start = i;
 	return mainFunction;
-}
-
-bool EntryClass::canParseFunctionThere(char character, int paranthesisNumber)
-{
-	if((character=='+' || character=='-') && paranthesisNumber == 0)
-		return true;
-		
-	return false;
-}
-
-int EntryClass::setTokenSign(char startingSign) //zmien nazwe
-{
-	if(startingSign=='-')
-		return -1; 
-	else
-		return 1;
 }
 
 bool EntryClass::isANumber(char character)
@@ -114,6 +118,16 @@ int EntryClass::stringToInt(string iString)
 	
 	return oInt;
 }
+
+bool EntryClass::isCompletelyParsed(FunctionPiece functionPiece)
+{
+	if(functionPiece.mainFunction[0] == '(')
+		return false;
+		
+	return true;
+
+}
+
 
 EntryClass::~EntryClass()
 {
