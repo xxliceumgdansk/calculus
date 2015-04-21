@@ -1,22 +1,33 @@
 #include <iostream>
-#include "EntryClass.h"
+#include "Liczenie.h"
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#include "catch.hpp"
 
-using namespace std;
 
-int main()
+//using namespace std;
+
+/*int main()
 {
-    /*Liczenie syf("112x^19", "Syf");
-	string a=syf.monomial();
-	cout<<a;
-	return 0;*/
-	
-	EntryClass syf("25x^(28) + 54sin(x)^(2)");
-	for(int i=0; i<syf.function.size(); i++)
-	{
-		cout << syf.function[i].token << " to byl token " << syf.function[i].mainFunction << endl;
-	}
-	
+	Liczenie xd("x^15", "Syf", 13);
+	string b=xd.monomial();
+	cout << b;
 	return 0;
+}*/
+/*/Liczenie xd (mainFunction, coeeficent)
+
+	if(jestTrygonometryczna)
+	{
+		xd.trigonometry();
+	}
+	else if(jest monomialem)
+*/
+TEST_CASE( "Monomials are computed") {
+	Liczenie xd("x^15", "Syf", 13);
+    REQUIRE( xd.monomial() == "195x^14");
 }
 
-//(sin(e^(2(cos(x-1)))))^(2)*cos(tg(x^(1/2)-pi/2)) 
+TEST_CASE("simple logarithm")
+{
+	Liczenie xd("log14(5x+1)", "Syf", 13);
+	REQUIRE( xd.logarithmBasedA() == "13/((5x+1)*ln(14))");
+}
